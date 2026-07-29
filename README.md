@@ -12,19 +12,15 @@ Built with CrewAI, typed handoffs, persistent learner memory, and an adaptive re
 [![CI](https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor/actions/workflows/ci.yml/badge.svg)](https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor/actions/workflows/ci.yml)
 [![Watch demo](https://img.shields.io/badge/demo-watch_video-8B7CFF)](https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86)
 
-[Architecture](#architecture) · [Run locally](#run-locally) · [Demo video](#demo-video) · [Testing](#testing) · [Assignment coverage](#assignment-coverage)
+[Demo](#demo) · [Architecture](#architecture) · [Run locally](#run-locally) · [Testing](#testing) · [Assignment coverage](#assignment-coverage)
 
 </div>
 
-<div align="center">
-  <a href="https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86">
-    <img src="docs/screenshots/leo-home.png" width="900" alt="Watch the Leo multi-agent AI tutor demo">
-  </a>
-  <br>
-  <a href="https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86"><strong>▶ Watch the complete Leo demo</strong></a>
-  <br>
-  <sub>See four specialist agents plan, teach, quiz, evaluate, and adapt in one complete session.</sub>
-</div>
+## Demo
+
+https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86
+
+> See four specialist agents plan, teach, quiz, evaluate, and adapt in one complete session.
 
 ## What makes Leo different
 
@@ -252,7 +248,7 @@ CI also compiles the source before running the tests.
 └── requirements.txt
 ```
 
-## Demo video
+## Demo walkthrough
 
 [Watch the complete recorded walkthrough](https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86).
 The recording is hosted as a GitHub issue attachment and demonstrates Leo's
