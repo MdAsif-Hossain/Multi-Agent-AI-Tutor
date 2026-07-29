@@ -134,7 +134,7 @@ def test_preview_mode_runs_all_agent_handoffs() -> None:
 
 
 def test_live_crewai_wiring_matches_installed_framework_api() -> None:
-    engine = TutorEngine(preview_mode=False)
+    engine = TutorEngine(model="openai/gpt-4o-mini", preview_mode=False)
     coordinator = engine._agent("coordinator")
     explainer = engine._agent("explainer")
     plan = Task(
@@ -199,7 +199,7 @@ def test_real_crewai_sequential_kickoff_uses_typed_handoffs_without_network() ->
             remediation_fixture.quiz.model_dump_json(),
         ],
     ):
-        engine = TutorEngine(preview_mode=False)
+        engine = TutorEngine(model="openai/gpt-4o-mini", preview_mode=False)
         result = engine.create_lesson(
             profile,
             "Python recursion",
