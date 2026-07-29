@@ -10,7 +10,7 @@ Built with CrewAI, typed handoffs, persistent learner memory, and an adaptive re
 [![CrewAI](https://img.shields.io/badge/CrewAI-1.15-6C5CE7)](https://www.crewai.com/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.60-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
 [![CI](https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor/actions/workflows/ci.yml/badge.svg)](https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor/actions/workflows/ci.yml)
-[![Demo](https://img.shields.io/badge/demo-coming_soon-8B7CFF)](#demo-video)
+[![Watch demo](https://img.shields.io/badge/demo-watch_video-8B7CFF)](https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86)
 
 [Architecture](#architecture) · [Run locally](#run-locally) · [Demo video](#demo-video) · [Testing](#testing) · [Assignment coverage](#assignment-coverage)
 
@@ -246,17 +246,18 @@ CI also compiles the source before running the tests.
 
 ## Demo video
 
-<!--
-After uploading the recording to a GitHub issue, replace the URL and link text
-in the next line with the exact issue URL:
-https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor/issues/<issue-number>
--->
+<div align="center">
+  <a href="https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86">
+    <img src="docs/screenshots/leo-home.png" width="900" alt="Watch the Leo multi-agent AI tutor demo">
+  </a>
+  <br>
+  <a href="https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86"><strong>▶ Watch the complete Leo demo</strong></a>
+  <br>
+  <sub>Full learning session · four collaborating agents · adaptive re-teaching loop</sub>
+</div>
 
-> **Video status:** [Coming soon — the recording will be published in a GitHub issue](https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor/issues)
-
-The final **3–5 minute walkthrough** will be attached to a dedicated GitHub
-issue and linked above. A timed [recording script](docs/demo-script.md) is
-included to keep the presentation focused and demonstrate:
+The recording is hosted as a GitHub issue attachment and demonstrates Leo's
+complete workflow:
 
 - All four agent turns
 - Typed handoffs
@@ -266,7 +267,8 @@ included to keep the presentation focused and demonstrate:
 - Follow-up evaluation
 - Persistent learner memory
 
-Suggested recording flow:
+The accompanying [demo script](docs/demo-script.md) provides the presentation
+outline:
 
 | Time | What to show |
 |---|---|
@@ -287,7 +289,7 @@ Suggested recording flow:
 | Output quality | Coherent plan → lesson → quiz → evaluation → remediation |
 | Interface | Custom responsive Streamlit learning dashboard |
 | Code and README | Tests, CI, Mermaid architecture, setup and security documentation |
-| Demo | GitHub issue video placeholder plus timed full-session script |
+| Demo | Recorded full-session walkthrough plus timed presentation script |
 | Bonus | Evaluator-driven re-teaching loop and human pacing checkpoint |
 
 ## Limitations
