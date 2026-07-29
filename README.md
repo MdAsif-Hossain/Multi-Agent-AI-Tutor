@@ -248,31 +248,6 @@ CI also compiles the source before running the tests.
 └── requirements.txt
 ```
 
-## Demo walkthrough
-
-[Watch the complete recorded walkthrough](https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86).
-The recording is hosted as a GitHub issue attachment and demonstrates Leo's
-complete workflow:
-
-- All four agent turns
-- Typed handoffs
-- Human checkpoint
-- Intentionally weak answers
-- Automatic targeted re-teaching
-- Follow-up evaluation
-- Persistent learner memory
-
-The accompanying [demo script](docs/demo-script.md) provides the presentation
-outline:
-
-| Time | What to show |
-|---|---|
-| 0:00–0:30 | Problem, interface, and four specialist roles |
-| 0:30–1:30 | Student profile, topic selection, and Coordinator handoff |
-| 1:30–2:30 | Explainer lesson and Quiz Master questions |
-| 2:30–3:45 | Evaluator feedback and targeted re-teaching loop |
-| 3:45–5:00 | Follow-up result, memory, architecture, and repository |
-
 ## Assignment coverage
 
 | Criterion | Evidence |
