@@ -147,6 +147,31 @@ class TutorEngine:
             return model.model_validate(output.json_dict)
         return model.model_validate_json(output.raw)
 
+    @staticmethod
+    def _clarification_answered_by_profile(
+        plan: LearningPlan,
+        profile: StudentProfile,
+    ) -> bool:
+        """Return whether the Coordinator asked for information already collected."""
+
+        if not plan.clarification_needed or not plan.clarification_question:
+            return False
+        question = plan.clarification_question.casefold()
+        known_level = (
+            "experience",
+            "prior knowledge",
+            "skill level",
+            "start from",
+            "absolute zero",
+            "beginner",
+            "intermediate",
+            "advanced",
+        )
+        known_goal = ("your goal", "hope to achieve", "want to achieve")
+        return any(term in question for term in known_level) or (
+            bool(profile.goal) and any(term in question for term in known_goal)
+        )
+
     def create_lesson(
         self,
         profile: StudentProfile,
@@ -214,6 +239,18 @@ class TutorEngine:
         )
 
         plan = self._task_output(plan_task, LearningPlan)
+        if self._clarification_answered_by_profile(plan, profile):
+            plan = plan.model_copy(
+                update={
+                    "clarification_needed": False,
+                    "clarification_question": None,
+                }
+            )
+            self._emit(
+                "Coordinator",
+                "completed",
+                "The selected level and learning goal resolved the requested context.",
+            )
         if plan.clarification_needed:
             raise ClarificationRequired(
                 plan.clarification_question or "Please clarify the topic before continuing."

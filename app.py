@@ -204,6 +204,10 @@ div[data-testid="stForm"] {
   border: 1px solid var(--line); border-radius: 20px; padding: 1.15rem;
   background: rgba(16, 23, 42, .58);
 }
+div[data-testid="stTextArea"] textarea {
+  min-height: 7.5rem;
+  padding-bottom: 2.25rem;
+}
 .stButton > button, .stFormSubmitButton > button {
   border-radius: 12px; min-height: 2.75rem; font-weight: 700;
   border: 1px solid rgba(139,124,255,.35);
@@ -420,7 +424,7 @@ def sidebar(memory: StudentMemory) -> None:
                     "Your goal",
                     placeholder="What should you be able to do after this session?",
                     max_chars=240,
-                    height=95,
+                    height=125,
                 )
                 preview = st.toggle(
                     "Preview without an API key",

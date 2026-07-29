@@ -105,6 +105,28 @@ def test_feedback_route_is_bounded() -> None:
     assert required_route(report, attempt=2) == "complete"
 
 
+def test_collected_level_resolves_redundant_clarification() -> None:
+    profile = StudentProfile(
+        name="Asif",
+        level="Beginner",
+        goal="Become an AI engineer within six months",
+    )
+    plan = LearningPlan(
+        topic="AI Engineering",
+        learner_level="Beginner",
+        goal_summary=profile.goal,
+        objectives=["Understand AI", "Learn Python", "Build a project"],
+        teaching_strategy="Start with foundations.",
+        quiz_focus=["AI foundations", "Python"],
+        clarification_needed=True,
+        clarification_question=(
+            "Do you have prior programming experience, or should we start from absolute zero?"
+        ),
+    )
+
+    assert TutorEngine._clarification_answered_by_profile(plan, profile)
+
+
 def test_preview_mode_runs_all_agent_handoffs() -> None:
     events = []
     engine = TutorEngine(preview_mode=True, on_event=events.append)

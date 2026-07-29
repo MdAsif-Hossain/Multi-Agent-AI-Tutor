@@ -8,9 +8,13 @@ planning_task:
     {memory_context}
 
     Validate the request and create a focused plan with 3 to 5 measurable
-    objectives. Adapt the strategy to the student's level. If the topic is too
-    vague to teach responsibly, set clarification_needed and ask exactly one
-    concise clarification question. Do not teach or write quiz questions.
+    objectives. Adapt the strategy to the student's level. The form already
+    provides the learner's level and goal; treat those fields as sufficient and
+    never ask about prior experience, whether to start from zero, or what the
+    learner hopes to achieve. Only set clarification_needed when the requested
+    topic is missing, nonsensical, or does not identify any teachable subject.
+    If clarification is truly necessary, ask exactly one concise question. Do
+    not teach or write quiz questions.
   expected_output: >
     A valid LearningPlan containing the topic, level, goal summary, objectives,
     teaching strategy, quiz focus, and clarification state.
@@ -87,4 +91,3 @@ remediation_quiz_task:
     from the original quiz. Include private answer keys and scoring guides.
   expected_output: >
     A valid QuizPackage containing exactly two targeted follow-up questions.
-
