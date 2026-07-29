@@ -2,17 +2,19 @@
 
 # Leo — Adaptive Multi-Agent AI Tutor
 
-**A study session designed by four collaborating AI specialists, not one generic chatbot.**
+**A complete learning session designed by four collaborating AI specialists.**
 
-Built with CrewAI, typed handoffs, persistent learner memory, and an adaptive re-teaching loop.
+Leo plans, teaches, quizzes, evaluates, and re-teaches—not as one chatbot, but as an observable CrewAI workflow with typed handoffs, persistent learner memory, and deterministic quality controls.
 
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![CrewAI](https://img.shields.io/badge/CrewAI-1.15-6C5CE7)](https://www.crewai.com/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.60-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Gemini](https://img.shields.io/badge/LLM-Gemini_3.1_Flash--Lite-4285F4?logo=google&logoColor=white)](https://ai.google.dev/)
 [![CI](https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor/actions/workflows/ci.yml/badge.svg)](https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor/actions/workflows/ci.yml)
-[![Watch demo](https://img.shields.io/badge/demo-watch_video-8B7CFF)](https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86)
+[![Tests](https://img.shields.io/badge/tests-10_passing-20C997)](#testing-and-ci)
+[![License](https://img.shields.io/badge/license-MIT-2EA44F)](LICENSE)
 
-[Demo](#demo) · [Architecture](#architecture) · [Run locally](#run-locally) · [Testing](#testing) · [Assignment coverage](#assignment-coverage)
+[Demo](#demo) · [Highlights](#engineering-highlights) · [Architecture](#architecture) · [Quick start](#quick-start) · [Testing](#testing-and-ci) · [Rubric](#assignment-rubric-coverage)
 
 </div>
 
@@ -20,63 +22,78 @@ Built with CrewAI, typed handoffs, persistent learner memory, and an adaptive re
 
 https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86
 
-> See four specialist agents plan, teach, quiz, evaluate, and adapt in one complete session.
+> A complete session showing visible agent turns, structured handoffs, quiz evaluation, targeted re-teaching, and learner memory. The recording follows the included [3–5 minute demo script](docs/demo-script.md).
 
-## What makes Leo different
+## At a glance
 
-Leo turns a learning request into an observable multi-agent workflow:
+| | |
+|---|---|
+| **Orchestration** | Sequential CrewAI workflow with a conditional remediation loop |
+| **Agent team** | Coordinator, Explainer, Quiz Master, and Evaluator |
+| **Handoffs** | Validated Pydantic contracts instead of unstructured text |
+| **Memory** | Per-student SQLite history injected into future learning plans |
+| **Quality control** | Guardrails, deterministic grading, bounded retries, and route enforcement |
+| **Interface** | Responsive Streamlit workspace with visible agent activity |
+| **Models** | Gemini 3.1 Flash-Lite by default; Groq supported as a fallback |
+| **Verification** | 10 automated tests plus Python 3.12 GitHub Actions CI |
 
-1. The **Coordinator** validates the request, recalls learner history, and delegates objectives.
-2. The **Explainer** receives that plan and produces an adaptive lesson.
-3. The **Quiz Master** receives the plan and lesson, then creates a private-answer-key quiz.
-4. The **Evaluator** grades the student's answers against question-specific rubrics.
-5. The **Coordinator** reviews the evidence and either completes the session or starts targeted re-teaching.
+## Engineering highlights
 
-The app displays high-level orchestration events and typed handoffs without exposing private model reasoning.
+| Capability | Implementation | Why it matters |
+|---|---|---|
+| **Real multi-agent collaboration** | CrewAI tasks pass plan, lesson, quiz, and evaluation context forward | Each specialist consumes another agent's validated work |
+| **Typed boundaries** | `LearningPlan`, `LessonPackage`, `QuizPackage`, `EvaluationReport`, and `RoutingDecision` | Malformed handoffs fail early instead of silently corrupting the session |
+| **Deterministic control layer** | Python recalculates scores and enforces the remediation threshold | Final learning decisions do not depend only on model judgment |
+| **Adaptive feedback loop** | Weak concepts trigger a shorter lesson and two fresh follow-up questions | The system responds to evidence from the student's answers |
+| **Persistent personalization** | SQLite stores scores, strengths, and weak concepts by student | Previous sessions influence future Coordinator prompts |
+| **Human-in-the-loop pacing** | The student explicitly releases the Quiz Master after reviewing the lesson | The learner can pause and control progression |
+| **Recruiter-safe preview** | Deterministic preview mode runs without an API key | Reviewers can inspect the complete product flow without credentials |
 
-## Screens
+## Product experience
 
 | Adaptive lesson | Evaluation and feedback loop |
 |---|---|
-| ![Adaptive lesson](docs/screenshots/leo-lesson.png) | ![Evaluation dashboard](docs/screenshots/leo-feedback-loop.png) |
+| ![Leo adaptive lesson interface](docs/screenshots/leo-lesson.png) | ![Leo evaluation and remediation dashboard](docs/screenshots/leo-feedback-loop.png) |
 
-## Agent design
+The interface exposes high-level agent activity and handoffs while keeping private answer keys, scoring guides, and model reasoning out of the student view.
 
-| Agent | Owns | Does not do |
-|---|---|---|
-| Coordinator | Request validation, learning plan, delegation, recovery, routing | Write the full lesson or grade answers |
-| Explainer | Level-aware teaching, examples, analogies, misconceptions | Create scores or change the learning goal |
-| Quiz Master | Structured practice based only on taught material | Reveal answer keys before submission |
-| Evaluator | Rubric-based scoring, partial credit, concept-level feedback | Introduce unrelated concepts |
+## Agent team
 
-Every role has a distinct goal, backstory, behavioral boundary, and output contract in [`agents.yaml`](src/leo/config/agents.yaml). Task-specific prompt templates live in [`tasks.yaml`](src/leo/config/tasks.yaml).
+Each agent has its own role, goal, backstory, behavioral boundary, and output contract.
+
+| Agent | Receives | Produces | Boundary |
+|---|---|---|---|
+| **Coordinator** | Student profile, topic, prior memory, or evaluation evidence | `LearningPlan` and `RoutingDecision` | Plans and routes; does not teach or grade |
+| **Explainer** | Validated `LearningPlan` | `LessonPackage` | Teaches delegated objectives; does not score |
+| **Quiz Master** | Plan and completed lesson | `QuizPackage` with private answer-key metadata | Tests only taught concepts; does not evaluate |
+| **Evaluator** | Lesson, quiz rubric, and student answers | `EvaluationReport` | Awards evidence-based credit; does not introduce new material |
+
+Role prompts are defined in [`agents.yaml`](src/leo/config/agents.yaml), and task-specific templates are defined in [`tasks.yaml`](src/leo/config/tasks.yaml).
 
 ## Architecture
 
-Leo uses a **sequential orchestration pattern with a conditional feedback loop**. CrewAI tasks pass explicit context forward, while Python enforces grading totals, routing thresholds, and loop limits.
-
-Delegation is intentionally explicit: the Coordinator produces the `LearningPlan`, and the sequential process assigns that validated handoff to the Explainer. CrewAI's open-ended delegation tools stay disabled so an agent cannot skip, duplicate, or reorder the graded workflow.
+Leo uses **sequential orchestration with a conditional feedback loop**. CrewAI manages the specialist tasks; Pydantic validates their outputs; Python owns scoring, routing, persistence, and UI state.
 
 ```mermaid
-flowchart LR
-    U[Student] --> UI[Streamlit UI]
-    UI --> C[Coordinator]
-    M[(Student Memory)] --> C
-    C -->|LearningPlan| E[Explainer]
-    E -->|LessonPackage| Q[Quiz Master]
-    Q -->|QuizPackage| UI
-    UI -->|StudentAnswers| V[Evaluator]
-    V -->|EvaluationReport| C
-    C -->|Mastered| S[Session Summary]
-    C -->|Weak concepts| R[Targeted re-teaching]
-    R --> Q2[Follow-up Quiz]
-    Q2 --> UI
-    S --> M
+flowchart TD
+    U[Student request] --> UI[Streamlit UI]
+    DB[(SQLite learner memory)] --> C1[Coordinator]
+    UI --> C1
+    C1 -->|LearningPlan| E1[Explainer]
+    E1 -->|LessonPackage| Q1[Quiz Master]
+    Q1 -->|QuizPackage| UI
+    UI -->|StudentAnswers| EV1[Evaluator]
+    EV1 -->|EvaluationReport| C2[Coordinator]
+    C2 -->|Mastered| DONE[Session complete]
+    C2 -->|Weak concepts on attempt 1| E2[Targeted Explainer]
+    E2 -->|Remediation lesson| Q2[Quiz Master]
+    Q2 -->|Follow-up QuizPackage| UI
+    UI -->|Follow-up answers| EV2[Evaluator]
+    EV2 --> DONE
+    DONE --> DB
 ```
 
-### Real handoffs
-
-The workflow passes validated Pydantic models instead of loosely formatted text:
+### Typed handoff chain
 
 ```text
 StudentProfile + prior memory
@@ -88,78 +105,100 @@ StudentProfile + prior memory
     → RoutingDecision
 ```
 
-Question IDs survive the Quiz Master → Evaluator handoff. The application hides `correct_answer`, `explanation`, and `scoring_guide` fields from the student-facing quiz while keeping them available to the Evaluator.
+Question IDs remain stable from quiz generation through evaluation. The student-facing payload excludes `correct_answer`, `explanation`, and `scoring_guide`, while the Evaluator receives the complete private rubric.
 
-## Adaptive feedback loop
+### Orchestration controls
 
-When the first attempt scores below 70% or contains weak concepts:
+- `Process.sequential` preserves a clear, auditable task order.
+- `output_pydantic` validates every structured agent result.
+- Quiz guardrails require exactly four initial questions (`Q1`–`Q4`) and two remediation questions (`R1`–`R2`).
+- Evaluation coverage requires one result for every source question.
+- Each agent is limited to four iterations and 120 seconds per execution.
+- Structured-output tasks receive at most two guardrail retries.
+- The feedback loop is capped at two attempts.
+
+## Adaptive learning loop
+
+An initial score below 70%, or remaining weak concepts, triggers one targeted remediation cycle:
 
 ```text
 Evaluator identifies weak concepts
-    → Coordinator selects re-teaching
-    → Explainer creates a shorter targeted lesson
-    → Quiz Master creates two fresh follow-up questions
+    → Coordinator enforces re-teaching
+    → Explainer teaches only the identified gaps
+    → Quiz Master creates two new questions
     → Evaluator checks the second attempt
+    → Session completes and memory is updated
 ```
 
-The loop is capped at one remediation cycle. This prevents an agent from stalling the session or creating an infinite retry loop.
+`finalize_evaluation()` recalculates totals from the source quiz, and `required_route()` enforces the learning threshold. This keeps grading and routing consistent even when an LLM returns an incorrect total or recommendation.
 
-## Memory
+## Learner memory
 
-Leo stores per-student session summaries in local SQLite:
+Leo stores a compact session summary in local SQLite:
 
-- Student name and level
+- Student name and selected level
 - Topic and learning goal
 - Final score
 - Mastered concepts
 - Weak concepts
 - Session timestamp
 
-The Coordinator receives the last three session summaries as prompt context. Returning learners therefore influence future planning instead of seeing memory only as a decorative history list.
+The Coordinator receives the three most recent summaries as prompt context. Names are matched case-insensitively, so returning students receive continuity without creating duplicate profiles.
 
 ## Reliability and safety
 
-- Pydantic validation for every agent handoff
-- Unique and traceable question IDs
-- Deterministic score calculation in Python
-- Maximum two structured-output retries
-- Bounded agent iterations and execution time
-- Clear clarification path for ambiguous topics
-- Preserved form state after recoverable failures
-- API keys loaded only from environment variables
-- Preview mode clearly separated from live CrewAI mode
-- No private chain-of-thought rendered in the interface
+| Risk | Control |
+|---|---|
+| Malformed agent output | Pydantic validation and bounded guardrail retries |
+| Duplicate or missing quiz items | Exact-count guardrails and unique question-ID validation |
+| Incomplete evaluation | Coverage guardrail aligned to the source quiz |
+| Incorrect model-generated totals | Deterministic score normalization in Python |
+| Unsafe or inconsistent routing | Deterministic 70% threshold and maximum-attempt enforcement |
+| Redundant clarification | Collected level and goal resolve questions already answered by the form |
+| Stalled agent execution | Iteration and execution-time limits |
+| Accidental answer-key exposure | Separate public quiz payload |
+| Credential leakage | Environment-only keys; `.env` and runtime data are ignored by Git |
+| Misleading offline demo | Preview mode is visibly separated from live CrewAI mode |
 
 ## Technology
 
+| Layer | Technology |
+|---|---|
+| Agent framework | CrewAI |
+| LLM providers | Gemini API; Groq fallback through LiteLLM |
+| Interface | Streamlit |
+| Contracts and validation | Pydantic |
+| Prompt configuration | YAML |
+| Learner memory | SQLite |
+| Testing | Pytest and Streamlit AppTest |
+| Automation | GitHub Actions |
+
+Compatible dependency ranges are maintained in [`requirements.txt`](requirements.txt).
+
+## Quick start
+
+### Prerequisites
+
 - Python 3.12
-- CrewAI 1.15.8
-- Streamlit 1.60
-- Gemini 3.1 Flash-Lite by default, with Groq fallback
-- Pydantic 2
-- SQLite from the Python standard library
-- Pytest and Streamlit AppTest
-- GitHub Actions
+- A Gemini API key for live mode; no key is required for preview mode
 
-The versions above are the versions used during final verification. Compatible ranges are recorded in [`requirements.txt`](requirements.txt).
-
-## Run locally
-
-### 1. Create an environment
+### 1. Clone and create an environment
 
 ```bash
+git clone https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor.git
+cd Multi-Agent-AI-Tutor
 python -m venv .venv
 ```
 
-Windows:
+Activate it:
 
 ```powershell
+# Windows PowerShell
 .\.venv\Scripts\Activate.ps1
 ```
 
-macOS or Linux:
-
 ```bash
+# macOS or Linux
 source .venv/bin/activate
 ```
 
@@ -169,31 +208,27 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 3. Configure the model
+### 3. Configure live mode
 
-Copy `.env.example` to `.env` and add your own provider key:
+Copy `.env.example` to `.env`, then add your key:
 
 ```env
 LEO_MODEL=gemini/gemini-3.1-flash-lite
 GEMINI_API_KEY=your_key_here
 ```
 
-Gemini 3.1 Flash-Lite is Leo's default because it is stable, supports structured
-output, and is available on the Gemini free tier. Create a key in
-[Google AI Studio](https://aistudio.google.com/app/apikey).
+Create a Gemini key in [Google AI Studio](https://aistudio.google.com/app/apikey).
 
-To use Groq instead:
+Optional Groq configuration:
 
 ```env
 LEO_MODEL=groq/openai/gpt-oss-120b
 GROQ_API_KEY=your_key_here
 ```
 
-Create the alternative key in the [Groq console](https://console.groq.com/keys).
-Both services enforce free-tier rate limits. Never commit `.env`; it is already
-ignored by Git.
+Never commit `.env`; it is already excluded by [`.gitignore`](.gitignore).
 
-### 4. Start Leo
+### 4. Run Leo
 
 ```bash
 streamlit run app.py
@@ -201,31 +236,42 @@ streamlit run app.py
 
 Open `http://localhost:8501`.
 
-### Preview without a key
+### Preview without an API key
 
-Keep **Preview without an API key** enabled in the sidebar. Preview mode runs a deterministic sample workflow so reviewers can inspect the complete UI, handoff timeline, grading dashboard, and feedback loop.
+Leave **Preview without an API key** enabled in the sidebar. Preview mode uses deterministic sample content so reviewers can inspect the interface, handoff timeline, grading dashboard, and remediation loop without making an LLM call.
 
-Preview output must not be presented as a live model run. For the assignment video, disable preview mode and use a configured CrewAI model.
+For the recorded assignment demo, use live mode with Gemini.
 
-## Testing
+### Environment variables
 
-Install the development dependencies and run:
+| Variable | Purpose | Default |
+|---|---|---|
+| `LEO_MODEL` | CrewAI model identifier | `gemini/gemini-3.1-flash-lite` |
+| `GEMINI_API_KEY` | Gemini live-mode credential | — |
+| `GROQ_API_KEY` | Groq fallback credential | — |
+| `LEO_DB_PATH` | SQLite learner-memory location | `data/leo.db` |
+
+## Testing and CI
+
+Install the development requirements and run:
 
 ```bash
 pip install -r requirements-dev.txt
 pytest -q
 ```
 
-The test suite verifies:
+The 10-test suite covers:
 
-- Quiz schema and unique IDs
-- Deterministic grading totals
-- Bounded remediation routing
-- All four agent handoffs
-- Persistent case-insensitive learner memory
-- A full Streamlit session through both quiz attempts
+- Pydantic quiz constraints and unique IDs
+- Deterministic grading totals and route enforcement
+- Redundant-clarification recovery
+- All four preview-mode agent handoffs
+- Real CrewAI sequential wiring with provider calls mocked
+- Gemini and Groq provider initialization
+- Case-insensitive persistent learner memory
+- A complete Streamlit session through remediation and final evaluation
 
-CI also compiles the source before running the tests.
+The [`quality`](.github/workflows/ci.yml) workflow runs on every push and pull request. It installs Python 3.12 dependencies, compiles `app.py` and `src`, and executes the keyless test suite.
 
 ## Project structure
 
@@ -234,45 +280,43 @@ CI also compiles the source before running the tests.
 ├── app.py                       # Streamlit interface and session state
 ├── src/leo/
 │   ├── engine.py                # CrewAI orchestration and preview adapter
-│   ├── models.py                # Typed handoff contracts and routing rules
-│   ├── storage.py               # Durable SQLite student memory
+│   ├── models.py                # Typed handoffs, grading, and routing rules
+│   ├── storage.py               # SQLite learner memory
 │   └── config/
-│       ├── agents.yaml          # Per-role prompts and behavior
-│       └── tasks.yaml           # Task prompts and expected outputs
-├── tests/                       # Unit and full Streamlit workflow tests
+│       ├── agents.yaml          # Role prompts and behavioral boundaries
+│       └── tasks.yaml           # Task templates and expected outputs
+├── tests/
+│   ├── test_workflow.py         # Contracts, orchestration, memory, providers
+│   └── test_app.py              # End-to-end Streamlit workflow
 ├── docs/
-│   ├── screenshots/
-│   └── demo-script.md
+│   ├── screenshots/             # Portfolio interface evidence
+│   └── demo-script.md           # Timed recording plan
 ├── .github/workflows/ci.yml
 ├── .env.example
 └── requirements.txt
 ```
 
-## Assignment coverage
+## Assignment rubric coverage
 
-| Criterion | Evidence |
+| Criterion | Implementation evidence |
 |---|---|
-| 4+ agent roles | Four behaviorally distinct CrewAI agents |
-| Orchestration and handoffs | Sequential CrewAI tasks, typed contexts, visible event timeline |
-| Framework | CrewAI agents, crews, tasks, LLM configuration, structured output |
-| Memory and prompts | SQLite learner memory plus YAML templates per role |
-| Output quality | Coherent plan → lesson → quiz → evaluation → remediation |
-| Interface | Custom responsive Streamlit learning dashboard |
-| Code and README | Tests, CI, Mermaid architecture, setup and security documentation |
-| Demo | Recorded full-session walkthrough plus timed presentation script |
-| Bonus | Evaluator-driven re-teaching loop and human pacing checkpoint |
+| **4+ distinct agents** | Four agents with separate prompts, responsibilities, inputs, outputs, and boundaries |
+| **Orchestration and handoffs** | Sequential CrewAI tasks with validated plan → lesson → quiz → evaluation context |
+| **Framework** | CrewAI `Agent`, `Task`, `Crew`, `Process.sequential`, `LLM`, callbacks, and guardrails |
+| **Memory and prompt templates** | SQLite learner history plus per-role and per-task YAML templates |
+| **Final output quality** | Coherent lesson, structured practice, rubric feedback, and targeted remediation |
+| **Interface** | Responsive Streamlit dashboard with visible agent activity |
+| **Code and README** | Modular source, architecture diagram, setup guide, tests, CI, screenshots, and license |
+| **Demo video** | Native GitHub video player at the top of this README |
+| **Bonus** | Evaluator-driven re-teaching loop and student-controlled checkpoint |
 
-## Limitations
+## Scope and limitations
 
-- AI-generated lessons and evaluations can be wrong; important academic facts should be checked against trusted sources.
-- Local SQLite memory is designed for a single-machine demo. A multi-user deployment should use an external managed database.
-- Preview mode validates product behavior and presentation, not model quality.
-- The first release intentionally excludes web search to keep the graded workflow focused and auditable.
-
-## Resume-ready description
-
-> Built an adaptive multi-agent tutoring system with CrewAI and Streamlit, coordinating specialized planning, teaching, quiz-generation, and evaluation agents through typed handoffs. Implemented persistent learner memory, deterministic rubric scoring, and an evaluator-driven re-teaching loop, with automated end-to-end UI tests and CI.
+- AI-generated lessons and evaluations can be wrong; important academic information should be verified with trusted sources.
+- SQLite memory is intentionally local and suited to a single-machine demonstration. A multi-user deployment should use an external managed database.
+- Preview mode demonstrates product behavior and presentation, not live-model quality.
+- Web search is intentionally excluded from the first release to keep the assessed workflow focused and auditable.
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+Released under the [MIT License](LICENSE). Copyright © 2026 Md Asif Hossain.
