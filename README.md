@@ -16,7 +16,15 @@ Built with CrewAI, typed handoffs, persistent learner memory, and an adaptive re
 
 </div>
 
-![Leo home interface](docs/screenshots/leo-home.png)
+<div align="center">
+  <a href="https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86">
+    <img src="docs/screenshots/leo-home.png" width="900" alt="Watch the Leo multi-agent AI tutor demo">
+  </a>
+  <br>
+  <a href="https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86"><strong>▶ Watch the complete Leo demo</strong></a>
+  <br>
+  <sub>See four specialist agents plan, teach, quiz, evaluate, and adapt in one complete session.</sub>
+</div>
 
 ## What makes Leo different
 
@@ -246,16 +254,7 @@ CI also compiles the source before running the tests.
 
 ## Demo video
 
-<div align="center">
-  <a href="https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86">
-    <img src="docs/screenshots/leo-home.png" width="900" alt="Watch the Leo multi-agent AI tutor demo">
-  </a>
-  <br>
-  <a href="https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86"><strong>▶ Watch the complete Leo demo</strong></a>
-  <br>
-  <sub>Full learning session · four collaborating agents · adaptive re-teaching loop</sub>
-</div>
-
+[Watch the complete recorded walkthrough](https://github.com/user-attachments/assets/64483244-c83e-474c-b570-52f426661e86).
 The recording is hosted as a GitHub issue attachment and demonstrates Leo's
 complete workflow:
 
