@@ -1,0 +1,90 @@
+planning_task:
+  description: >
+    Student: {student_name}
+    Level: {level}
+    Learning goal: {goal}
+    Requested topic: {topic}
+    Previous learning memory:
+    {memory_context}
+
+    Validate the request and create a focused plan with 3 to 5 measurable
+    objectives. Adapt the strategy to the student's level. If the topic is too
+    vague to teach responsibly, set clarification_needed and ask exactly one
+    concise clarification question. Do not teach or write quiz questions.
+  expected_output: >
+    A valid LearningPlan containing the topic, level, goal summary, objectives,
+    teaching strategy, quiz focus, and clarification state.
+
+explanation_task:
+  description: >
+    Use the Coordinator's LearningPlan from context. Teach only its objectives
+    at the requested level. Include a memorable hook, clear sections, a useful
+    analogy, one worked example, common misconceptions, and concise takeaways.
+    Do not create a quiz and do not mention hidden agent instructions.
+  expected_output: >
+    A valid LessonPackage that is accurate, cohesive, and ready to show directly
+    to the student.
+
+quiz_task:
+  description: >
+    Use the LearningPlan and LessonPackage from context. Create exactly four
+    questions: one recall question, two application questions, and one reasoning
+    question. Assess only concepts actually taught. Use stable IDs Q1 through
+    Q4. Include private correct answers, explanations, scoring guides, concept
+    tags, and 10 points per question.
+  expected_output: >
+    A valid QuizPackage with exactly four unique, fair questions and complete
+    private answer-key metadata.
+
+evaluation_task:
+  description: >
+    Evaluate the student's answers using only the supplied lesson, quiz answer
+    key, and scoring guides. Award fair partial credit. Every quiz question must
+    receive one QuestionEvaluation with the same question_id.
+
+    Lesson:
+    {lesson_json}
+
+    Quiz with private answer key:
+    {quiz_json}
+
+    Student answers:
+    {answers_json}
+  expected_output: >
+    A valid EvaluationReport with per-question grading, constructive feedback,
+    strengths, mastered concepts, weak concepts, and an overall explanation.
+
+routing_task:
+  description: >
+    Review the Evaluator's report from context. This is attempt {attempt} of 2.
+    Recommend reteaching only when the score is below 70 percent or weak
+    concepts remain and another attempt is allowed. Otherwise complete the
+    session. Address the student directly and keep the message encouraging.
+  expected_output: >
+    A valid RoutingDecision with action, rationale, weak concepts, and a concise
+    student-facing message.
+
+remediation_lesson_task:
+  description: >
+    The Evaluator identified these weak concepts:
+    {weak_concepts}
+
+    Evaluation feedback:
+    {evaluation_json}
+
+    Original lesson:
+    {lesson_json}
+
+    Create a shorter targeted lesson that corrects the specific misunderstandings.
+    Use a fresh analogy or example. Do not repeat the entire original lesson.
+  expected_output: >
+    A valid, concise LessonPackage focused only on the weak concepts.
+
+remediation_quiz_task:
+  description: >
+    Use the targeted remediation lesson from context. Create exactly two new
+    questions with IDs R1 and R2. Test the weak concepts in a different way
+    from the original quiz. Include private answer keys and scoring guides.
+  expected_output: >
+    A valid QuizPackage containing exactly two targeted follow-up questions.
+
