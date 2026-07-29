@@ -9,7 +9,10 @@ Built with CrewAI, typed handoffs, persistent learner memory, and an adaptive re
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![CrewAI](https://img.shields.io/badge/CrewAI-1.15-6C5CE7)](https://www.crewai.com/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.60-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![Tests](https://img.shields.io/badge/tests-passing-33DDC4)](#testing)
+[![CI](https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor/actions/workflows/ci.yml/badge.svg)](https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor/actions/workflows/ci.yml)
+[![Demo](https://img.shields.io/badge/demo-coming_soon-8B7CFF)](#demo-video)
+
+[Architecture](#architecture) · [Run locally](#run-locally) · [Demo video](#demo-video) · [Testing](#testing) · [Assignment coverage](#assignment-coverage)
 
 </div>
 
@@ -243,7 +246,17 @@ CI also compiles the source before running the tests.
 
 ## Demo video
 
-The repository includes a timed [3–5 minute recording script](docs/demo-script.md) that demonstrates:
+<!--
+After uploading the recording to a GitHub issue, replace the URL and link text
+in the next line with the exact issue URL:
+https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor/issues/<issue-number>
+-->
+
+> **Video status:** [Coming soon — the recording will be published in a GitHub issue](https://github.com/MdAsif-Hossain/Multi-Agent-AI-Tutor/issues)
+
+The final **3–5 minute walkthrough** will be attached to a dedicated GitHub
+issue and linked above. A timed [recording script](docs/demo-script.md) is
+included to keep the presentation focused and demonstrate:
 
 - All four agent turns
 - Typed handoffs
@@ -252,6 +265,16 @@ The repository includes a timed [3–5 minute recording script](docs/demo-script
 - Automatic targeted re-teaching
 - Follow-up evaluation
 - Persistent learner memory
+
+Suggested recording flow:
+
+| Time | What to show |
+|---|---|
+| 0:00–0:30 | Problem, interface, and four specialist roles |
+| 0:30–1:30 | Student profile, topic selection, and Coordinator handoff |
+| 1:30–2:30 | Explainer lesson and Quiz Master questions |
+| 2:30–3:45 | Evaluator feedback and targeted re-teaching loop |
+| 3:45–5:00 | Follow-up result, memory, architecture, and repository |
 
 ## Assignment coverage
 
@@ -264,7 +287,7 @@ The repository includes a timed [3–5 minute recording script](docs/demo-script
 | Output quality | Coherent plan → lesson → quiz → evaluation → remediation |
 | Interface | Custom responsive Streamlit learning dashboard |
 | Code and README | Tests, CI, Mermaid architecture, setup and security documentation |
-| Demo | Timed full-session script |
+| Demo | GitHub issue video placeholder plus timed full-session script |
 | Bonus | Evaluator-driven re-teaching loop and human pacing checkpoint |
 
 ## Limitations
