@@ -1,0 +1,14 @@
+[theme]
+base = "dark"
+primaryColor = "#8B7CFF"
+backgroundColor = "#070B18"
+secondaryBackgroundColor = "#10172A"
+textColor = "#F7F8FC"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false
+
+[runner]
+fastReruns = true
+

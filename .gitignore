@@ -1,0 +1,11 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.streamlit/secrets.toml
+.leo/
+data/
+graphify-out/
+.edge-headless/
+.streamlit-*.log
