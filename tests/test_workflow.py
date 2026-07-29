@@ -4,10 +4,10 @@ from unittest.mock import patch
 
 import pytest
 from crewai import Crew, Process, Task
-from crewai.llms.providers.openai.completion import OpenAICompletion
+from crewai.llms.providers.gemini.completion import GeminiCompletion
 from pydantic import ValidationError
 
-from leo.engine import TutorEngine
+from leo.engine import DEFAULT_MODEL, GROQ_MODEL, TutorEngine
 from leo.models import (
     EvaluationReport,
     LearningPlan,
@@ -134,7 +134,7 @@ def test_preview_mode_runs_all_agent_handoffs() -> None:
 
 
 def test_live_crewai_wiring_matches_installed_framework_api() -> None:
-    engine = TutorEngine(model="openai/gpt-4o-mini", preview_mode=False)
+    engine = TutorEngine(model=DEFAULT_MODEL, preview_mode=False)
     coordinator = engine._agent("coordinator")
     explainer = engine._agent("explainer")
     plan = Task(
@@ -159,6 +159,13 @@ def test_live_crewai_wiring_matches_installed_framework_api() -> None:
     assert crew.process == Process.sequential
     assert coordinator.role != explainer.role
     assert lesson.context == [plan]
+
+
+def test_groq_free_tier_fallback_initializes() -> None:
+    engine = TutorEngine(model=GROQ_MODEL, preview_mode=False)
+
+    assert engine.llm is not None
+    assert engine.model_name == "groq/openai/gpt-oss-120b"
 
 
 def test_real_crewai_sequential_kickoff_uses_typed_handoffs_without_network() -> None:
@@ -187,7 +194,7 @@ def test_real_crewai_sequential_kickoff_uses_typed_handoffs_without_network() ->
     )
 
     with patch.object(
-        OpenAICompletion,
+        GeminiCompletion,
         "call",
         side_effect=[
             fixture.plan.model_dump_json(),
@@ -199,7 +206,7 @@ def test_real_crewai_sequential_kickoff_uses_typed_handoffs_without_network() ->
             remediation_fixture.quiz.model_dump_json(),
         ],
     ):
-        engine = TutorEngine(model="openai/gpt-4o-mini", preview_mode=False)
+        engine = TutorEngine(model=DEFAULT_MODEL, preview_mode=False)
         result = engine.create_lesson(
             profile,
             "Python recursion",

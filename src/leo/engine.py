@@ -34,6 +34,8 @@ load_dotenv()
 
 EventCallback = Callable[[AgentEvent], None]
 ModelT = TypeVar("ModelT", bound=BaseModel)
+DEFAULT_MODEL = "gemini/gemini-3.1-flash-lite"
+GROQ_MODEL = "groq/openai/gpt-oss-120b"
 
 
 def quiz_shape_guardrail(expected_count: int, prefix: str):
@@ -98,7 +100,7 @@ class TutorEngine:
         preview_mode: bool = False,
         on_event: EventCallback | None = None,
     ) -> None:
-        self.model_name = model or os.getenv("LEO_MODEL", "openai/gpt-4o-mini")
+        self.model_name = model or os.getenv("LEO_MODEL", DEFAULT_MODEL)
         self.preview_mode = preview_mode
         self.on_event = on_event
         config_dir = Path(__file__).parent / "config"

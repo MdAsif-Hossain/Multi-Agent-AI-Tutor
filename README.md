@@ -128,6 +128,7 @@ The Coordinator receives the last three session summaries as prompt context. Ret
 - Python 3.12
 - CrewAI 1.15.8
 - Streamlit 1.60
+- Gemini 3.1 Flash-Lite by default, with Groq fallback
 - Pydantic 2
 - SQLite from the Python standard library
 - Pytest and Streamlit AppTest
@@ -166,11 +167,24 @@ pip install -r requirements.txt
 Copy `.env.example` to `.env` and add your own provider key:
 
 ```env
-LEO_MODEL=openai/gpt-4o-mini
-OPENAI_API_KEY=your_key_here
+LEO_MODEL=gemini/gemini-3.1-flash-lite
+GEMINI_API_KEY=your_key_here
 ```
 
-Any CrewAI/LiteLLM-compatible model can be supplied through `LEO_MODEL`. Never commit `.env`; it is already ignored by Git.
+Gemini 3.1 Flash-Lite is Leo's default because it is stable, supports structured
+output, and is available on the Gemini free tier. Create a key in
+[Google AI Studio](https://aistudio.google.com/app/apikey).
+
+To use Groq instead:
+
+```env
+LEO_MODEL=groq/openai/gpt-oss-120b
+GROQ_API_KEY=your_key_here
+```
+
+Create the alternative key in the [Groq console](https://console.groq.com/keys).
+Both services enforce free-tier rate limits. Never commit `.env`; it is already
+ignored by Git.
 
 ### 4. Start Leo
 

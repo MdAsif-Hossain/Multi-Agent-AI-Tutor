@@ -10,7 +10,7 @@ import streamlit as st
 ROOT = Path(__file__).parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from leo.engine import ClarificationRequired, TutorEngine  # noqa: E402
+from leo.engine import DEFAULT_MODEL, ClarificationRequired, TutorEngine  # noqa: E402
 from leo.models import (  # noqa: E402
     AgentEvent,
     AssessmentBundle,
@@ -245,7 +245,7 @@ def initialize_state() -> None:
         "topic": "",
         "history": [],
         "preview_mode": True,
-        "model_name": os.getenv("LEO_MODEL", "openai/gpt-4o-mini"),
+        "model_name": os.getenv("LEO_MODEL", DEFAULT_MODEL),
         "saved": False,
     }
     for key, value in defaults.items():
@@ -257,6 +257,16 @@ def reset_session() -> None:
     for key in list(st.session_state):
         del st.session_state[key]
     st.rerun()
+
+
+def provider_api_key_available(model_name: str) -> bool:
+    provider = model_name.partition("/")[0].lower()
+    key_name = {
+        "gemini": "GEMINI_API_KEY",
+        "google": "GEMINI_API_KEY",
+        "groq": "GROQ_API_KEY",
+    }.get(provider)
+    return bool(key_name and os.getenv(key_name))
 
 
 def event_handler(status_box):
@@ -414,10 +424,7 @@ def sidebar(memory: StudentMemory) -> None:
                 )
                 preview = st.toggle(
                     "Preview without an API key",
-                    value=not any(
-                        os.getenv(key)
-                        for key in ("OPENAI_API_KEY", "GEMINI_API_KEY", "GROQ_API_KEY")
-                    ),
+                    value=not provider_api_key_available(st.session_state.model_name),
                     help="Uses deterministic sample content to test the full interface. Turn off for the graded CrewAI run.",
                 )
                 model_name = st.text_input(
